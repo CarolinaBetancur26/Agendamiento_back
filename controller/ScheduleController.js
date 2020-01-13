@@ -5,27 +5,27 @@ module.exports = {
     
     show: async function (sede_id, prestacion_id, cb) {
 
-        const questions = await this.getQuestions(`SELECT * FROM schedule WHERE sede_id= ${sede_id} AND prestacion_id = ${prestacion_id}`)
-        const answer = await this.getQuestions(`SELECT * FROM available_days`)
-        const answer2 = await this.getQuestions(`SELECT * FROM intervals`)
+        const schedule = await this.getQuestions(`SELECT * FROM schedule WHERE sede_id= ${sede_id} AND prestacion_id = ${prestacion_id}`)
+        const available = await this.getQuestions(`SELECT * FROM available_days`)
+        const available2 = await this.getQuestions(`SELECT * FROM intervals`)
         let final =[]
         let objs =[]
         let objs2 =[]
         let objp =[]
   
-        questions.forEach((question, index )=> {
-            answer.forEach((answer,_index)=>{
-                if(answer.available_id == question.available_id){
-                    answer2.forEach((answer2,_index)=>{
-                        if(answer2.available_id == answer.available_id){
-                            objs2.push(answer2.hora)                   
+        schedule.forEach((sche, index )=> {
+            available.forEach((available,_index)=>{
+                if(available.available_id == sche.available_id){
+                    available2.forEach((available2,_index)=>{
+                        if(available2.available_id == available.available_id){
+                            objs2.push(available2.hora)                   
                          } 
                     })
-                   objs.push({date_initial:answer.date_initial,date_finally:answer.date_finally, interval: objs2})                   
+                   objs.push({date_initial:available.date_initial,date_finally:available.date_finally, interval: objs2})                   
                 }                                  
              }) 
            
-             objp.push({[question.available_id]: objs})
+             objp.push({[sche.available_id]: objs})
              objs =[]
              objs2 =[]
         });
